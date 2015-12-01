@@ -32,23 +32,23 @@
         android:layout_alignParentEnd="true"
         android:hint="Enter Email" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Email"
-        android:id="@+id/addBtn"
-        android:layout_below="@+id/emailInpt"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/emailInpt"
-        android:layout_alignEnd="@+id/emailInpt" />
-
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/emailList"
-        android:layout_below="@+id/addBtn"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/button" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Email"
+        android:id="@+id/button"
+        android:layout_below="@+id/emailInpt"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
