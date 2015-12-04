@@ -117,7 +117,7 @@ public class AddNames extends AppCompatActivity {
         private int layout;
         public MyListAdapter(Context context, int resource, List<String> objects) {
             super(context, resource, objects);
-            layout = resource; //in our case this is R.layout.list_item, which is an xml file I made
+            layout = resource; //in our case this is R.layout.list_item, which is an xml layout I made
         }
 
         //called when an object from the list comes on screen (I think)
@@ -134,10 +134,10 @@ public class AddNames extends AppCompatActivity {
                         String input = v.getText().toString();
                         Log.d("", input); //prints inpt, for debugging
                         if (input.equals("")) {
-                            adapter.remove(""); //re
+                            adapter.remove("");
                             // move this element from the array
                         } else if (list.indexOf("") == list.size()-1) {
-                            adapter.add(""); //FIX THIS
+                            adapter.add(""); //removes last element FIX THIS
                         }
                         return false;
                     }
