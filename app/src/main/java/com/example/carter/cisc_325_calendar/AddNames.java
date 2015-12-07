@@ -1,8 +1,11 @@
 package com.example.carter.cisc_325_calendar;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -26,7 +29,8 @@ public class AddNames extends AppCompatActivity {
         //get references to objects created in content_add_names.xml
         emailInpt = (EditText) findViewById(R.id.emailInpt);
         ListView emailList = (ListView) findViewById(R.id.emailList);
-        Button button = (Button) findViewById((R.id.button));
+        Button button = (Button) findViewById(R.id.button);
+        ImageButton calendarIcon = (ImageButton) findViewById(R.id.imageButton);
 
         adapter = new MyListAdapter(this, R.layout.list_item, list); //hook adapter up to the ArrayList list
         emailList.setAdapter(adapter); //hook adapter up to the ListView emailList
@@ -37,6 +41,22 @@ public class AddNames extends AppCompatActivity {
             public void onClick(View v) {
                 adapter.add(emailInpt.getText().toString()); //add element into the ListView
                 emailInpt.setText(""); //reset input text
+            }
+        });
+
+        calendarIcon.setImageResource(android.R.drawable.ic_menu_my_calendar); //set the top right-hand calendar icon
+
+        //on click, open the native android calendar app
+        calendarIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //from http://stackoverflow.com/questions/6617231/how-to-use-calendar-intent-in-android
+                long startMillis = System.currentTimeMillis();
+                Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+                builder.appendPath("time");
+                ContentUris.appendId(builder, startMillis);
+                Intent intent = new Intent(Intent.ACTION_VIEW).setData(builder.build());
+                startActivity(intent);
             }
         });
 
@@ -108,7 +128,7 @@ public class AddNames extends AppCompatActivity {
         //called when an object from the list comes on screen (I think)
         @Override
         public View getView(final int position, View view, ViewGroup parent) {
-            ViewHolder holder; //simple class for holding and initializing a Button and EditText object
+            ViewHolder holder; //custom class for holding and initializing a Button and EditText object
             if (view == null) { //if item in ListView emailList hasn't been initialized
                 LayoutInflater inflater = LayoutInflater.from(getContext());
                 view = inflater.inflate(layout, parent, false); //initialize the list_item
@@ -122,28 +142,28 @@ public class AddNames extends AppCompatActivity {
                 view.setTag(holder); //save holder so we can get it later using view.getTag()
             } else { //if item has already been initialized
                 holder = (ViewHolder) view.getTag(); //retrieve saved ViewHolder
-                holder.position = position;
+                holder.position = position; //save a reference to the new position whenever list is edited
             }
-            holder.inpt.setText(adapter.getItem(position));
-
-            return view; //I think this is what it displays on-screen?
+            holder.inpt.setText(adapter.getItem(position)); //reassigns each item to the string stored in list
+            return view; //this is what it displays on-screen?
         }
     }
 
-    //a custom class for easily storing components from list_item, used only in the class above
+    //a custom class for easily storing components from list_item, used only in the above class
     public class ViewHolder {
         int position; //only reason this class exists is so we can dynamically update position in the callback functions
-        EditText inpt;
+        EditText inpt; //and save references to each listView item
         Button minus;
 
+        //triggered when inpt text is submitted
         public void setInptEditListener() {
             inpt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
                 public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    String input = v.getText().toString();
-                    list.set(position, input);
-                    adapter.notifyDataSetChanged();
-                    Toast.makeText(AddNames.this, "edited text at position: " + position, Toast.LENGTH_SHORT).show();
+                    String input = v.getText().toString(); //get text from inpt
+                    list.set(position, input); //save it to the list at this position
+                    adapter.notifyDataSetChanged(); //update adapter (this will call getView)
+                    Toast.makeText(AddNames.this, "edited text at position: " + position, Toast.LENGTH_SHORT).show(); //for debugging
                     //keeps an empty element at the bottom of the list
                     if (input.length() > 0 && position == list.size()-1) {
                         adapter.add("");
@@ -153,14 +173,14 @@ public class AddNames extends AppCompatActivity {
             });
         }
 
+        //triggered when the red minus button is clicked
         public void setMinusClickListener() {
             minus.setOnClickListener(new View.OnClickListener() {
-                //need to find a way to pass the local var position into this function
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(AddNames.this, "touched minus button at position " + position, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddNames.this, "touched minus button at position " + position, Toast.LENGTH_SHORT).show(); //debug message
                     list.remove(position); //remove this element from the array
-                    adapter.notifyDataSetChanged();
+                    adapter.notifyDataSetChanged(); //calls getView
                 }
             });
         }
