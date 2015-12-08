@@ -3,6 +3,7 @@ package com.example.carter.cisc_325_calendar;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -13,6 +14,7 @@ import android.view.*;
 import android.widget.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class AddNames extends AppCompatActivity {
@@ -25,6 +27,8 @@ public class AddNames extends AppCompatActivity {
         //initialization stuff
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_names);
+
+        //Toast.makeText(AddNames.this, ""), Toast.LENGTH_SHORT).show(); //debug message
 
         //get references to objects created in content_add_names.xml
         emailInpt = (EditText) findViewById(R.id.emailInpt);
@@ -43,8 +47,6 @@ public class AddNames extends AppCompatActivity {
                 emailInpt.setText(""); //reset input text
             }
         });
-
-        calendarIcon.setImageResource(android.R.drawable.ic_menu_my_calendar); //set the top right-hand calendar icon
 
         //on click, open the native android calendar app
         calendarIcon.setOnClickListener(new View.OnClickListener() {
